@@ -1,6 +1,6 @@
-import { Schema, model, connect } from "mongoose";
+import { Schema, model, connect, Model } from "mongoose";
 
-export type Gurdian = {
+export type TGurdian = {
   fathername: string;
   fatheroccupation: string;
   fathercontuctno: string;
@@ -9,22 +9,23 @@ export type Gurdian = {
   mothercontuctno: string;
 };
 
-export type Username = {
+export type TUsername = {
   firstname: string;
   middlename: string;
   lastname: string;
 };
 
-export type LocalGurdian = {
+export type TLocalGurdian = {
   name: string;
   occupation: string;
   contactNo: string;
   address: string;
 };
 // 1. Create an interface representing a document in MongoDB.
-export type Student = {
+export type TStudent = {
   id: string;
-  name: Username;
+  password: string;
+  name: TUsername;
   email: string;
   gender: "male" | "female";
   dateofbirth?: string;
@@ -33,8 +34,27 @@ export type Student = {
   BloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
   presentaddress: string;
   parmanentaddress: string;
-  gurdian: Gurdian;
-  localgurdian: LocalGurdian;
+  gurdian: TGurdian;
+  localgurdian: TLocalGurdian;
   profileImage?: string;
   isActive: "active" | "blocked";
+  isDeleted: boolean;
 };
+
+//for creating static
+
+export interface StudentModel extends Model<TStudent> {
+  isUserExists(id: string): Promise<TStudent | null>;
+
+  //for creating instance
+
+  //export type StudentMethods = {
+  //isUserExists(id: string): Promise<TStudent | null>;
+  //};
+
+  //export type StudentModel = Model<
+  //TStudent,
+  //Record<string, never>,
+  // StudentMethods
+  //>;
+}
