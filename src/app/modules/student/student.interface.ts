@@ -1,3 +1,4 @@
+import { Types } from "joi";
 import { Schema, model, connect, Model } from "mongoose";
 
 export type TGurdian = {
@@ -24,7 +25,7 @@ export type TLocalGurdian = {
 // 1. Create an interface representing a document in MongoDB.
 export type TStudent = {
   id: string;
-  password: string;
+  user: Types.ObjectId;
   name: TUsername;
   email: string;
   gender: "male" | "female";
@@ -37,7 +38,6 @@ export type TStudent = {
   gurdian: TGurdian;
   localgurdian: TLocalGurdian;
   profileImage?: string;
-  isActive: "active" | "blocked";
   isDeleted: boolean;
 };
 

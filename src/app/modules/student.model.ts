@@ -10,10 +10,10 @@ import {
   StudentModel,
   TUsername,
 } from "./student/student.interface";
-import { func } from "joi";
-import { kMaxLength } from "buffer";
-import bcrypt from "bcrypt";
-import config from "../config";
+//import { func } from "joi";
+//import { kMaxLength } from "buffer";
+
+//import config from "../config";
 
 const userNameSchema = new Schema<TUsername>({
   firstname: {
@@ -61,10 +61,11 @@ const gurdianSchema = new Schema<TGurdian>({
 const studentSchema = new Schema<TStudent, StudentModel>(
   {
     id: { type: String, required: true, unique: true },
-    password: {
-      type: String,
-      required: [true, "password is required"],
-      kMaxLength: [20, "password can not be more than 20 caracters"],
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, "User | is required"],
+      unique: true,
+      ref: "User",
     },
     name: {
       type: userNameSchema,
@@ -105,11 +106,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: true,
     },
     profileImage: { type: String },
-    isActive: {
-      type: String,
-      enum: ["active", "blocked"],
-      default: "active",
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -123,28 +119,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 );
 
 //pre save middleware/ hook
-studentSchema.pre("save", async function (next) {
-  // console.log(this, "pre hook : we will save data");
-
-  //const user = this;
-  //hashing password and save into DB
-  //const user = await bcrypt.hash(
-  // user.password,
-  // Number(config.bcrypt_salt_rounds)
-  //);
-  const user = this;
-  const users = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds)
-  );
-  next();
-});
-
-//post save middleware / hook
-studentSchema.post("save", function (doc, next) {
-  doc.password = "";
-  next();
-});
 
 // virtual
 
