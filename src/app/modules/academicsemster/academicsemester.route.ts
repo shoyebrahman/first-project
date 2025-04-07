@@ -13,6 +13,21 @@ router.post(
   AcademicSemestercontrollers.createAcademicSemester
 );
 
+router.get(
+  "/:semesterId",
+  AcademicSemestercontrollers.getSingleAcademicSemester
+);
+
+router.patch(
+  "/:semesterId",
+  validateRequest(
+    AcademicSemesterValidations.updateAcademicSemesterValidationSchema
+  ),
+  AcademicSemestercontrollers.updateAcademicSemester
+);
+
+router.get("/", AcademicSemestercontrollers.getAllAcademicSemesters);
+
 //router.get("/", studentcontroller.getAllStudents);
 
 //router.get("/:studentId", studentcontroller.getSingleStudent);

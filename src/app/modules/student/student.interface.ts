@@ -1,5 +1,5 @@
-import { Types } from "joi";
-import { Schema, model, connect, Model } from "mongoose";
+//import { Types } from "joi";
+import { Model, Types } from "mongoose";
 
 export type TGurdian = {
   fathername: string;
@@ -38,6 +38,7 @@ export type TStudent = {
   gurdian: TGurdian;
   localgurdian: TLocalGurdian;
   profileImage?: string;
+  admissionSemester: Types.ObjectId;
   isDeleted: boolean;
 };
 
