@@ -24,7 +24,23 @@ const findLastStudentId = async () => {
 
 export const generateStudentId = async (payLoad: TAcademicSemester) => {
   // first time 0000
-  const currentId = (await findLastStudentId()) || (0).toString();
+  let currentId = (0).toString(); // 0000 by default
+
+  const lastStudentId = await findLastStudentId();
+
+  // 2030 01 0001
+  const lastStudentSemesterCode = lastStudentId?.substring(4, 6); // 01
+  const lastStudentYear = lastStudentId?.substring(0, 4); // 2030
+  const currentSemesterCode = payLoad.code;
+  const currentYear = payLoad.year;
+
+  if (
+    lastStudentId &&
+    lastStudentSemesterCode === currentSemesterCode &&
+    lastStudentYear === currentYear
+  ) {
+    currentId = lastStudentId.substring(6);
+  }
 
   console.log();
 
