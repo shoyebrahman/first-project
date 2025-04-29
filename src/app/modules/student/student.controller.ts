@@ -5,7 +5,7 @@ import status from "http-status";
 import catchAsync from "../../utils/catchAsync";
 
 const getAllStudents: RequestHandler = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentFromDB();
+  const result = await StudentServices.getAllStudentFromDB(req.query);
 
   sendResponse(res, {
     statusCode: status.OK,
@@ -27,6 +27,19 @@ const getSingleStudent: RequestHandler = catchAsync(async (req, res) => {
   });
 });
 
+const updatedStudent = catchAsync(async (req, res) => {
+  const { studentId } = req.params;
+  const { student } = req.body;
+
+  const result = await StudentServices.updateStudentIntoDB(studentId, student);
+  sendResponse(res, {
+    statusCode: status.OK,
+    success: true,
+    message: "student are updated successfully",
+    data: result,
+  });
+});
+
 const deleteStudent: RequestHandler = catchAsync(async (req, res) => {
   const { studentId } = req.params;
 
@@ -44,4 +57,5 @@ export const studentcontroller = {
   getAllStudents,
   getSingleStudent,
   deleteStudent,
+  updatedStudent,
 };

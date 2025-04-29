@@ -1,13 +1,12 @@
-// set id automatically
-// year semesterCode 4 digit number
-
 import { TAcademicSemester } from "../academicsemster/academicsemester.interface";
 import { User } from "../user.model";
 
-const findLastStudentId = async () => {
+const findLastStudentId = async (year: string, code: string) => {
+  const prefix = `${year}${code}`;
   const lastStudent = await User.findOne(
     {
       role: "student",
+      id: { $regex: `^${prefix}` },
     },
     {
       id: 1,
@@ -15,38 +14,26 @@ const findLastStudentId = async () => {
     }
   )
     .sort({
-      createdAt: -1,
+      id: -1,
     })
     .lean();
 
-  return lastStudent?.id ? lastStudent.id.substring(6) : undefined;
+  return lastStudent?.id;
 };
 
 export const generateStudentId = async (payLoad: TAcademicSemester) => {
-  // first time 0000
-  let currentId = (0).toString(); // 0000 by default
+  const year = payLoad.year;
+  const code = payLoad.code;
 
-  const lastStudentId = await findLastStudentId();
+  const lastId = await findLastStudentId(year, code);
 
-  // 2030 01 0001
-  const lastStudentSemesterCode = lastStudentId?.substring(4, 6); // 01
-  const lastStudentYear = lastStudentId?.substring(0, 4); // 2030
-  const currentSemesterCode = payLoad.code;
-  const currentYear = payLoad.year;
-
-  if (
-    lastStudentId &&
-    lastStudentSemesterCode === currentSemesterCode &&
-    lastStudentYear === currentYear
-  ) {
-    currentId = lastStudentId.substring(6);
+  let lastNumericPart = 0;
+  if (lastId) {
+    lastNumericPart = parseInt(lastId.slice(6), 10); // get last 4 digits
   }
 
-  console.log();
+  const newIdNumber = (lastNumericPart + 1).toString().padStart(4, "0");
+  const finalId = `${year}${code}${newIdNumber}`; // e.g., 2030010002
 
-  let incrementId = (Number(currentId) + 1).toString().padStart(4, "0");
-
-  incrementId = `${payLoad.year}${payLoad.code}${incrementId}`;
-
-  return incrementId;
+  return finalId;
 };

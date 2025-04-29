@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import { Schema, model } from "mongoose";
+import { Schema, SchemaType, model } from "mongoose";
 import validator from "validator";
 
 import {
@@ -110,6 +110,11 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: Schema.Types.ObjectId,
       ref: "AcademicSemester",
     },
+    AcademicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: "AcademicDepartment",
+    },
+
     isDeleted: {
       type: Boolean,
       default: false,
